@@ -89,6 +89,27 @@ export default {
       return $dirty ? !$error : null;
     },
     register() {
+      // Validate data
+      this.$v.user.$touch();
+      if (this.$v.user.$anyError) {
+        return;
+      }
+
+      // Request API
+      const api = 'http://localhost:1016/api/auth/register';
+      this.axios.post(api, { ...this.user }).then((res) => {
+        // Save Token
+        console.log(res.data);
+        localStorage.setItem('token', res.data.data.token);
+        // Turn to home
+        this.$router.replace({ name: 'Home' });
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: 'Data validate error',
+          variant: 'danger',
+          solid: true,
+        });
+      });
       console.log('register');
     },
   },
