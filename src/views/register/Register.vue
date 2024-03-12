@@ -55,6 +55,8 @@
 <script>
 import { required, minLength } from 'vuelidate/lib/validators';
 import customValidator from '@/helper/validator';
+import storageService from '@/service/storageService';
+import userService from '@/service/userService';
 
 export default {
   data() {
@@ -96,13 +98,15 @@ export default {
       }
 
       // Request API
-      const api = 'http://localhost:1016/api/auth/register';
-      this.axios.post(api, { ...this.user }).then((res) => {
+      userService.register(this.user).then((res) => {
         // Save Token
-        console.log(res.data);
-        localStorage.setItem('token', res.data.data.token);
-        // Turn to home
-        this.$router.replace({ name: 'Home' });
+        storageService.set(storageService.USER_TOKEN, res.data.data.token);
+        userService.info().then((response) => {
+          // Save user info
+          storageService.set(storageService.USER_INFO, JSON.stringify(response.data.data.user));
+          // Turn to home
+          this.$router.replace({ name: 'Home' });
+        });
       }).catch((err) => {
         this.$bvToast.toast(err.response.data.msg, {
           title: 'Data validate error',
