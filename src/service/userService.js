@@ -6,6 +6,12 @@ const register = ({ name, telephone, password }) => {
   return request.post('auth/register', { name, telephone, password });
 };
 
+// user Login
+
+const login = ({ telephone, password }) => {
+  return request.post('auth/login', { telephone, password });
+};
+
 // get user info
 
 const info = () => {
@@ -14,5 +20,6 @@ const info = () => {
 
 export default {
   register,
+  login,
   info,
 };

@@ -111,8 +111,6 @@ export default {
           solid: true,
         });
       });
-
-      console.log('register');
     },
   },
 };

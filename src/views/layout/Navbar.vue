@@ -45,8 +45,9 @@
               <template #button-content>
                 <em>{{userInfo.name}}</em>
               </template>
-              <b-dropdown-item href="#">Personal Page</b-dropdown-item>
-              <b-dropdown-item href="#">Sign In</b-dropdown-item>
+              <!-- eslint-disable-next-line max-len -->
+              <b-dropdown-item @click="$router.push({ name: 'profile' })">Personal Page</b-dropdown-item>
+              <b-dropdown-item @click="logout">Log Out</b-dropdown-item>
             </b-nav-item-dropdown>
             <div v-if="!userInfo">
               <b-nav-item
@@ -66,12 +67,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
   }),
+
+  methods: mapActions('userModule', ['logout']),
 };
 </script>
 
