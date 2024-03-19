@@ -32,6 +32,11 @@ const routes = [
     name: 'PostCreate',
     component: PostCreate, // 添加PostManagement路由
   },
+  {
+    path: '/posts/edit/:id',
+    name: 'PostEdit',
+    component: () => import('@/views/PostEdit.vue'), // 确保路径正确
+  },
   ...userRoutes,
 ];
 

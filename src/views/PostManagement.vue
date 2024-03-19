@@ -10,6 +10,15 @@
         :items="posts"
         :fields="fields"
       >
+        <!-- 封面图片插槽 -->
+        <template #cell(head_img)="data">
+          <img
+            :src="data.item.head_img"
+            alt="Post Cover Image"
+            class="post-cover-image"
+          />
+        </template>
+
         <template #cell(actions)="data">
           <b-button
             size="sm"
@@ -24,29 +33,21 @@
         </template>
       </b-table>
     </div>
-
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-// eslint-disable-next-line import/extensions
 import storageService from '../service/storageService'; // 确保路径正确
 
 export default {
   data() {
     return {
       posts: [],
-      viewMode: 'list', // 'list' 或 'form'
-      formMode: 'create', // 'create' 或 'edit'
-      currentPost: {
-        category_id: null,
-        title: '',
-        head_img: '',
-        content: '',
-      },
+      viewMode: 'list', // 'list'
       fields: [
         { key: 'title', sortable: true },
+        { key: 'head_img', label: 'Cover Image' }, // 封面图片字段
         { key: 'category_id', sortable: true },
         { key: 'actions', label: 'Actions' },
       ],
@@ -60,39 +61,18 @@ export default {
       const token = storageService.get(storageService.USER_TOKEN);
       axios.post('http://localhost:1016/posts/page/list', {}, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { pageNum: 1, pageSize: 10 }, // 根据需要调整分页参数
+        params: { pageNum: 1, pageSize: 10 },
       }).then((response) => {
-        this.posts = response.data.data.data; // 从响应中获取文章列表
-        this.totalRows = response.data.data.total; // 假设后端返回了总条数，如果没有，请相应调整
+        this.posts = response.data.data.data;
       }).catch((error) => {
         console.error('There was an error fetching the posts:', error);
       });
     },
 
-    showCreateForm() {
-      this.currentPost = {
-        category_id: null, title: '', head_img: '', content: '',
-      };
-      this.viewMode = 'form';
-      this.formMode = 'create';
-    },
     showEditForm(post) {
-      this.currentPost = { ...post };
-      this.viewMode = 'form';
-      this.formMode = 'edit';
+      this.$router.push({ name: 'PostEdit', params: { id: post.id } });
     },
 
-    updatePost(postId) {
-      const token = storageService.get(storageService.USER_TOKEN);
-      axios.put(`http://localhost:1016/posts/${postId}`, this.currentPost, {
-        headers: { Authorization: `Bearer ${token}` },
-      }).then(() => {
-        this.fetchPosts();
-        this.viewMode = 'list';
-      }).catch((error) => {
-        console.error('There was an error updating the post:', error);
-      });
-    },
     deletePost(postId) {
       const token = storageService.get(storageService.USER_TOKEN);
       axios.delete(`http://localhost:1016/posts/${postId}`, {
@@ -103,9 +83,13 @@ export default {
         console.error('There was an error deleting the post:', error);
       });
     },
-    cancelForm() {
-      this.viewMode = 'list';
-    },
   },
 };
 </script>
+
+  <style>
+.post-cover-image {
+  max-width: 100px; /* Adjust the size as needed */
+  height: auto;
+}
+</style>
