@@ -5,6 +5,7 @@ import PostManagement from '@/views/PostManagement.vue';
 import PostCreate from '@/views/PostCreate.vue';
 import Home from '../views/Home.vue';
 import userRoutes from './module/user';
+import PostDetail from '../views/PostDetail.vue';
 
 Vue.use(VueRouter);
 
@@ -36,6 +37,11 @@ const routes = [
     path: '/posts/edit/:id',
     name: 'PostEdit',
     component: () => import('@/views/PostEdit.vue'), // 确保路径正确
+  },
+  {
+    path: '/posts/:id/detail',
+    name: 'PostDetail',
+    component: PostDetail, // 确保路径正确
   },
   ...userRoutes,
 ];

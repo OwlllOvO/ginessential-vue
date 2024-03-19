@@ -11,6 +11,9 @@
         :fields="fields"
       >
         <!-- 封面图片插槽 -->
+        <template #cell(title)="data">
+          <router-link :to="`/posts/${data.item.id}/detail`">{{ data.item.title }}</router-link>
+        </template>
         <template #cell(head_img)="data">
           <img
             :src="data.item.head_img"
