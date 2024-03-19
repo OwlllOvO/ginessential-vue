@@ -16,7 +16,8 @@
         :key="comment.id"
         class="comment"
       >
-        <p><strong>{{ comment.User.Name }}</strong>: {{ comment.content }}</p>
+        <!-- eslint-disable-next-line max-len -->
+        <p><strong>{{ comment.User.Name }} ({{ comment.User.Role }}):</strong> {{ comment.content }}</p>
       </div>
 
       <textarea
