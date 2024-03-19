@@ -16,10 +16,11 @@
         </template>
         <template #cell(head_img)="data">
           <img
-            :src="data.item.head_img"
+            :src="getImageUrl(data.item.head_img)"
             alt="Post Cover Image"
             class="post-cover-image"
           />
+
         </template>
 
         <template #cell(actions)="data">
@@ -60,6 +61,9 @@ export default {
     this.fetchPosts();
   },
   methods: {
+    getImageUrl(relativePath) {
+      return `http://localhost:1016/images/${relativePath}`;
+    },
     fetchPosts() {
       const token = storageService.get(storageService.USER_TOKEN);
       axios.post('http://localhost:1016/posts/page/list', {}, {

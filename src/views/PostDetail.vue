@@ -1,11 +1,13 @@
 <template>
   <div class="post-detail">
-    <h2>{{ post.title }}</h2>
+    <h1>{{ post.title }}</h1>
+    <h2> Drawing </h2>
     <img
-      :src="post.head_img"
+      :src="getImageUrl(post.head_img)"
       alt="Post Cover Image"
       class="post-cover-image"
     /> <!-- 添加这行 -->
+    <h2> Description </h2>
     <p>{{ post.content }}</p>
     <div class="comments-section">
       <h3>Comments</h3>
@@ -45,6 +47,9 @@ export default {
     this.fetchPost();
   },
   methods: {
+    getImageUrl(relativePath) {
+      return `http://localhost:1016/images/${relativePath}`;
+    },
     fetchPost() {
       const postId = this.$route.params.id;
       const token = storageService.get(storageService.USER_TOKEN); // 获取Token
