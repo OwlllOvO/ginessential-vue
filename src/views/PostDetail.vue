@@ -14,8 +14,9 @@
         :key="comment.id"
         class="comment"
       >
-        <p>{{ comment.content }}</p>
+        <p><strong>{{ comment.User.Name }}</strong>: {{ comment.content }}</p>
       </div>
+
       <textarea
         v-model="newComment"
         placeholder="Write a comment..."
