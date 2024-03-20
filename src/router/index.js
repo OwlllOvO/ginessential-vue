@@ -6,6 +6,7 @@ import PostCreate from '@/views/PostCreate.vue';
 import Home from '../views/Home.vue';
 import userRoutes from './module/user';
 import PostDetail from '../views/PostDetail.vue';
+import adminUserRoutes from './module/admin';
 
 Vue.use(VueRouter);
 
@@ -44,6 +45,7 @@ const routes = [
     component: PostDetail, // 确保路径正确
   },
   ...userRoutes,
+  ...adminUserRoutes,
 ];
 
 const router = new VueRouter({
