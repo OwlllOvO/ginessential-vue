@@ -2,12 +2,12 @@
   <div class="post-create">
     <b-card title="Create Post">
       <b-form @submit.prevent="createPost">
-        <b-form-group label="Category ID">
-          <b-form-input
-            v-model="currentPost.category_id"
-            type="number"
+        <b-form-group label="Category">
+          <b-form-select
+            v-model="currentPost.category_name"
+            :options="categoryOptions"
             required
-          ></b-form-input>
+          ></b-form-select>
         </b-form-group>
         <b-form-group label="Title">
           <b-form-input
@@ -45,29 +45,47 @@
 
 <script>
 import axios from 'axios';
-import storageService from '../service/storageService'; // 确保路径正确
+import storageService from '../service/storageService';
 
 export default {
   data() {
     return {
+      categories: [],
       currentPost: {
-        category_id: null,
+        category_name: '',
         title: '',
         head_img: '',
         content: '',
       },
     };
   },
+  created() {
+    this.fetchCategories();
+  },
+  computed: {
+    categoryOptions() {
+      return this.categories.map((category) => ({ value: category.name, text: category.name }));
+    },
+  },
   methods: {
+    fetchCategories() {
+      axios.get('http://localhost:1016/categories', {
+        headers: { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` },
+      })
+        .then((response) => {
+          this.categories = response.data.data.categories;
+        })
+        .catch((error) => {
+          console.error('There was an error fetching the categories:', error);
+        });
+    },
     createPost() {
       const postData = {
         ...this.currentPost,
-        category_id: Number(this.currentPost.category_id), // 显式转换为数字
       };
 
-      const token = storageService.get(storageService.USER_TOKEN);
       axios.post('http://localhost:1016/posts', postData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` },
       })
         .then(() => {
           this.$bvToast.toast('Article created successfully', {
@@ -75,7 +93,7 @@ export default {
             variant: 'success',
             solid: true,
           });
-          this.$router.push({ name: 'postManagement' }); // 确保路由名称正确
+          this.$router.push({ name: 'postManagement' }); // Redirect to post management page
         })
         .catch((error) => {
           console.error('There was an error creating the post:', error);
@@ -87,8 +105,7 @@ export default {
         });
     },
     cancelForm() {
-      // 取消表单逻辑，例如重置表单或返回列表页面
-      this.$router.push({ name: 'postManagement' }); // 确保路由名称正确
+      this.$router.push({ name: 'postManagement' }); // Redirect to post management page
     },
   },
 };

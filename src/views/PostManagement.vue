@@ -10,19 +10,26 @@
         :items="posts"
         :fields="fields"
       >
-        <!-- 封面图片插槽 -->
+        <!-- 文章标题 -->
         <template #cell(title)="data">
           <router-link :to="`/posts/${data.item.id}/detail`">{{ data.item.title }}</router-link>
         </template>
+
+        <!-- 封面图片 -->
         <template #cell(head_img)="data">
           <img
             :src="getImageUrl(data.item.head_img)"
             alt="Post Cover Image"
             class="post-cover-image"
           />
-
         </template>
 
+        <!-- 分类名称 -->
+        <template #cell(category)="data">
+          {{ data.item.Category.name }}
+        </template>
+
+        <!-- 操作按钮 -->
         <template #cell(actions)="data">
           <b-button
             size="sm"
@@ -42,17 +49,17 @@
 
 <script>
 import axios from 'axios';
-import storageService from '../service/storageService'; // 确保路径正确
+import storageService from '../service/storageService';
 
 export default {
   data() {
     return {
       posts: [],
-      viewMode: 'list', // 'list'
+      viewMode: 'list',
       fields: [
         { key: 'title', sortable: true },
-        { key: 'head_img', label: 'Cover Image' }, // 封面图片字段
-        { key: 'category_id', sortable: true },
+        { key: 'head_img', label: 'Cover Image' },
+        { key: 'Category.name', label: 'Category' }, // 修改这里来显示分类名称
         { key: 'actions', label: 'Actions' },
       ],
     };
@@ -75,11 +82,9 @@ export default {
         console.error('There was an error fetching the posts:', error);
       });
     },
-
     showEditForm(post) {
       this.$router.push({ name: 'PostEdit', params: { id: post.id } });
     },
-
     deletePost(postId) {
       const token = storageService.get(storageService.USER_TOKEN);
       axios.delete(`http://localhost:1016/posts/${postId}`, {
@@ -94,7 +99,7 @@ export default {
 };
 </script>
 
-  <style>
+<style>
 .post-cover-image {
   max-width: 100px; /* Adjust the size as needed */
   height: auto;
