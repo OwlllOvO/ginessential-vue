@@ -31,7 +31,7 @@
 
 <script>
 import axios from 'axios';
-import storageService from '../service/storageService'; // 引入storageService
+import storageService from '../../service/storageService'; // 引入storageService
 
 export default {
   data() {

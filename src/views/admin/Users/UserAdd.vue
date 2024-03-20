@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2>修改用户信息</h2>
-    <form @submit.prevent="updateUser">
+    <h2>添加用户</h2>
+    <form @submit.prevent="addUser">
       <div>
         <label>名称:</label>
         <input
@@ -23,6 +23,7 @@
         <input
           type="password"
           v-model="user.Password"
+          required
         >
       </div>
       <div>
@@ -33,7 +34,7 @@
           required
         >
       </div>
-      <button type="submit">更新</button>
+      <button type="submit">提交</button>
     </form>
     <p
       v-if="message"
@@ -46,7 +47,7 @@
 
 <script>
 import axios from 'axios';
-import storageService from '../../service/storageService'; // 确保已经创建并导入了这个服务
+import storageService from '../../../service/storageService';
 
 export default {
   data() {
@@ -54,45 +55,38 @@ export default {
       user: {
         Name: '',
         Telephone: '',
-        Password: '', // 注意：出于安全考虑，通常不会在前端展示密码
+        Password: '',
         Role: '',
       },
       message: '', // 用于显示后端返回的提示信息
       isSuccess: true, // 用于标记提示信息是成功还是错误消息
     };
   },
-  created() {
-    this.loadUser();
-  },
   methods: {
-    loadUser() {
-      const userId = this.$route.params.id;
+    addUser() {
       const token = storageService.get(storageService.USER_TOKEN);
-
-      axios.get(`http://localhost:1016/admin/users/${userId}`, {
+      axios.post('http://localhost:1016/admin/users', this.user, {
         headers: { Authorization: `Bearer ${token}` },
       }).then((response) => {
-        this.user = response.data.data;
-      }).catch((error) => {
-        this.message = error.response.data.msg || '加载用户信息失败';
-        this.isSuccess = false;
-      });
-    },
-    updateUser() {
-      const userId = this.$route.params.id;
-      const token = storageService.get(storageService.USER_TOKEN);
-
-      axios.put(`http://localhost:1016/admin/users/${userId}`, this.user, {
-        headers: { Authorization: `Bearer ${token}` },
-      }).then(() => {
-        this.$router.push({ path: '/admin/users' }); // 更新成功后返回用户列表页面
-        this.message = '用户信息更新成功';
+        // 操作成功，显示成功信息
+        this.message = response.data.msg || '用户添加成功！';
         this.isSuccess = true;
+        // 可能还需要根据实际需求重置表单或跳转到其他页面
       }).catch((error) => {
-        this.message = error.response.data.msg || '更新用户信息失败';
+        // 操作失败，显示错误信息
+        this.message = error.response.data.msg || '添加用户失败！';
         this.isSuccess = false;
       });
     },
   },
 };
 </script>
+
+<style>
+.success-message {
+  color: green;
+}
+.error-message {
+  color: red;
+}
+</style>

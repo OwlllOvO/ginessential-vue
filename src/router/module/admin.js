@@ -1,28 +1,60 @@
-const adminUserRoutes = [
+const adminRoutes = [
   {
     path: '/admin/users',
-    name: 'userlist',
+    name: 'adminuserlist',
     meta: {
       auth: true,
     },
-    component: () => import('@/views/admin/UserList.vue'),
+    component: () => import('@/views/admin/Users/UserList.vue'),
   },
   {
     path: '/admin/users/add',
-    name: 'useradd',
+    name: 'adminuseradd',
     meta: {
       auth: true,
     },
-    component: () => import('@/views/admin/UserAdd.vue'),
+    component: () => import('@/views/admin/Users/UserAdd.vue'),
   },
   {
     path: '/admin/users/update/:id',
-    name: 'userupdate',
+    name: 'adminuserupdate',
     meta: {
       auth: true,
     },
-    component: () => import('@/views/admin/UserUpdate.vue'),
+    component: () => import('@/views/admin/Users/UserUpdate.vue'),
+  },
+  {
+    path: '/admin/posts',
+    name: 'adminpostlist',
+    meta: {
+      auth: true,
+    },
+    component: () => import('@/views/admin/Posts/PostList.vue'),
+  },
+  {
+    path: '/admin/posts/create',
+    name: 'adminpostcreate',
+    meta: {
+      auth: true,
+    },
+    component: () => import('@/views/admin/Posts/PostCreate.vue'),
+  },
+  {
+    path: '/admin/posts/edit/:id',
+    name: 'adminpostedit',
+    meta: {
+      auth: true,
+    },
+    component: () => import('@/views/admin/Posts/PostEdit.vue'),
+  },
+  {
+    path: '/admin/posts/:id',
+    name: 'adminpostdetail',
+    meta: {
+      auth: true,
+    },
+    component: () => import('@/views/admin/Posts/PostDetail.vue'),
   },
 ];
 
-export default adminUserRoutes;
+export default adminRoutes;

@@ -29,7 +29,7 @@
 
 <script>
 import axios from 'axios';
-import storageService from '../../service/storageService'; // 导入 Token 存储服务
+import storageService from '../../../service/storageService'; // 导入 Token 存储服务
 
 export default {
   data() {

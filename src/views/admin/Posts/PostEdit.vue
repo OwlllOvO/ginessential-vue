@@ -1,7 +1,7 @@
 <template>
-  <div class="post-create">
-    <b-card title="Create Post">
-      <b-form @submit.prevent="createPost">
+  <div class="post-edit">
+    <b-card title="Edit Post">
+      <b-form @submit.prevent="updatePost">
         <b-form-group label="Category">
           <b-form-select
             v-model="currentPost.category_name"
@@ -33,9 +33,9 @@
         <b-button
           type="submit"
           variant="primary"
-        >Create</b-button>
+        >Update</b-button>
         <b-button
-          @click="cancelForm"
+          @click="cancelEdit"
           variant="secondary"
         >Cancel</b-button>
       </b-form>
@@ -45,13 +45,14 @@
 
 <script>
 import axios from 'axios';
-import storageService from '../service/storageService';
+import storageService from '../../../service/storageService';
 
 export default {
   data() {
     return {
       categories: [],
       currentPost: {
+        id: null,
         category_name: '',
         title: '',
         head_img: '',
@@ -60,6 +61,7 @@ export default {
     };
   },
   created() {
+    this.loadPostData();
     this.fetchCategories();
   },
   computed: {
@@ -79,33 +81,37 @@ export default {
           console.error('There was an error fetching the categories:', error);
         });
     },
-    createPost() {
+    loadPostData() {
+      const postId = this.$route.params.id;
+      const token = storageService.get(storageService.USER_TOKEN);
+      axios.get(`http://localhost:1016/posts/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((response) => {
+          // eslint-disable-next-line max-len
+          this.currentPost = { ...response.data.data.post, category_name: response.data.data.post.Category.name };
+        })
+        .catch((error) => {
+          console.error('There was an error loading the post data:', error);
+        });
+    },
+    updatePost() {
       const postData = {
         ...this.currentPost,
       };
-
-      axios.post('http://localhost:1016/posts', postData, {
-        headers: { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` },
+      const token = storageService.get(storageService.USER_TOKEN);
+      axios.put(`http://localhost:1016/posts/${this.currentPost.id}`, postData, {
+        headers: { Authorization: `Bearer ${token}` },
       })
         .then(() => {
-          this.$bvToast.toast('Article created successfully', {
-            title: 'Success',
-            variant: 'success',
-            solid: true,
-          });
-          this.$router.push({ name: 'postManagement' }); // Redirect to post management page
+          this.$router.push({ name: 'adminpostlist' });
         })
         .catch((error) => {
-          console.error('There was an error creating the post:', error);
-          this.$bvToast.toast('Error creating article', {
-            title: 'Error',
-            variant: 'danger',
-            solid: true,
-          });
+          console.error('There was an error updating the post:', error);
         });
     },
-    cancelForm() {
-      this.$router.push({ name: 'postManagement' }); // Redirect to post management page
+    cancelEdit() {
+      this.$router.push({ name: 'adminpostlist' });
     },
   },
 };

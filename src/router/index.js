@@ -1,12 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '@/store';
-import PostManagement from '@/views/PostManagement.vue';
-import PostCreate from '@/views/PostCreate.vue';
 import Home from '../views/Home.vue';
 import userRoutes from './module/user';
-import PostDetail from '../views/PostDetail.vue';
-import adminUserRoutes from './module/admin';
+import adminRoutes from './module/admin';
+import postRoutes from './module/post';
 
 Vue.use(VueRouter);
 
@@ -24,28 +22,9 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
-  {
-    path: '/posts',
-    name: 'postManagement',
-    component: PostManagement, // 添加PostManagement路由
-  },
-  {
-    path: '/posts/create',
-    name: 'PostCreate',
-    component: PostCreate, // 添加PostManagement路由
-  },
-  {
-    path: '/posts/edit/:id',
-    name: 'PostEdit',
-    component: () => import('@/views/PostEdit.vue'), // 确保路径正确
-  },
-  {
-    path: '/posts/:id/detail',
-    name: 'PostDetail',
-    component: PostDetail, // 确保路径正确
-  },
   ...userRoutes,
-  ...adminUserRoutes,
+  ...adminRoutes,
+  ...postRoutes,
 ];
 
 const router = new VueRouter({

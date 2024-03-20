@@ -2,7 +2,7 @@
   <div class="post-management">
     <!-- 文章列表视图 -->
     <div v-if="viewMode === 'list'">
-      <router-link to="/posts/create">Create New Post</router-link>
+      <router-link to="/admin/posts/create">Create New Post</router-link>
 
       <b-table
         striped
@@ -12,7 +12,7 @@
       >
         <!-- 文章标题 -->
         <template #cell(title)="data">
-          <router-link :to="`/posts/${data.item.id}/detail`">{{ data.item.title }}</router-link>
+          <router-link :to="`/admin/posts/${data.item.id}`">{{ data.item.title }}</router-link>
         </template>
 
         <!-- 封面图片 -->
@@ -27,6 +27,10 @@
         <!-- 分类名称 -->
         <template #cell(category)="data">
           {{ data.item.Category.name }}
+        </template>
+
+        <template #cell(author)="data">
+          {{ data.item.User.Name }}
         </template>
 
         <!-- 操作按钮 -->
@@ -49,7 +53,7 @@
 
 <script>
 import axios from 'axios';
-import storageService from '../service/storageService';
+import storageService from '../../../service/storageService';
 
 export default {
   data() {
@@ -60,6 +64,7 @@ export default {
         { key: 'title', sortable: true },
         { key: 'head_img', label: 'Cover Image' },
         { key: 'Category.name', label: 'Category' }, // 修改这里来显示分类名称
+        { key: 'User.Name', label: 'Author' },
         { key: 'actions', label: 'Actions' },
       ],
     };
@@ -83,7 +88,7 @@ export default {
       });
     },
     showEditForm(post) {
-      this.$router.push({ name: 'PostEdit', params: { id: post.id } });
+      this.$router.push({ name: 'adminpostedit', params: { id: post.id } });
     },
     deletePost(postId) {
       const token = storageService.get(storageService.USER_TOKEN);
