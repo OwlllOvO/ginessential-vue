@@ -17,15 +17,22 @@
         class="comment"
       >
         <!-- eslint-disable-next-line max-len -->
-        <p><strong>{{ comment.User.Name }} ({{ comment.User.Role }}):</strong> {{ comment.content }}</p>
+        <p>
+          <strong>{{ comment.User.Name }} ({{ comment.User.Role }}):</strong>
+          {{ comment.content }} <br />
+          <small>{{ formatDate(comment.created_at) }}</small>
+        </p>
       </div>
-
       <textarea
         v-model="newComment"
         placeholder="Write a comment..."
       ></textarea>
       <button @click="addComment">Submit Comment</button>
     </div>
+    <button
+      @click="goBack"
+      class="back-button"
+    >Go Back</button>
   </div>
 </template>
 
@@ -62,6 +69,7 @@ export default {
       })
         .then((response) => {
           this.post = response.data.data.post;
+          this.post.comments.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
         })
         .catch((error) => {
           console.error('There was an error fetching the post:', error);
@@ -83,6 +91,15 @@ export default {
         .catch((error) => {
           console.error('There was an error submitting the comment:', error);
         });
+    },
+    goBack() {
+      this.$router.push({ name: 'postlist' });
+    },
+    formatDate(dateString) {
+      const options = {
+        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
+      };
+      return new Date(dateString).toLocaleDateString(undefined, options);
     },
   },
 };

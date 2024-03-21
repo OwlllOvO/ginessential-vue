@@ -90,7 +90,9 @@ export default {
 
 <style>
 .post-cover-image {
-  max-width: 100px; /* Adjust the size as needed */
-  height: auto;
+  max-width: 200px; /* 最大宽度 */
+  max-height: 200px; /* 最大高度 */
+  width: auto; /* 自动调整宽度以保持图像的宽高比 */
+  height: auto; /* 自动调整高度以保持图像的宽高比 */
 }
 </style>
