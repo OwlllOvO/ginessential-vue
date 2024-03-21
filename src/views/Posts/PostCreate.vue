@@ -50,7 +50,7 @@
 
 <script>
 import axios from 'axios';
-import storageService from '../../../service/storageService';
+import storageService from '../../service/storageService';
 
 export default {
   data() {
