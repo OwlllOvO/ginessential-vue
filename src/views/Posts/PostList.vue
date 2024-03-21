@@ -2,7 +2,8 @@
   <div class="post-management">
     <!-- 文章列表视图 -->
     <div v-if="viewMode === 'list'">
-      <router-link to="/posts/create">Create New Post</router-link>
+      <!-- eslint-disable-next-line -->
+      <router-link :to="isAdmin ? `/admin/posts/create` : `/posts/create`">Create New Post</router-link>
 
       <b-table
         striped
@@ -12,7 +13,10 @@
       >
         <!-- 文章标题 -->
         <template #cell(title)="data">
-          <router-link :to="`/posts/${data.item.id}`">{{ data.item.title }}</router-link>
+          <router-link :to="isAdmin ? `/admin/posts/${data.item.id}` : `/posts/${data.item.id}`">
+            {{ data.item.title }}
+          </router-link>
+
         </template>
 
         <!-- 封面图片 -->
@@ -28,8 +32,25 @@
         <template #cell(category)="data">
           {{ data.item.Category.name }}
         </template>
+
         <template #cell(author)="data">
           {{ data.item.User.Name }}
+        </template>
+
+        <!-- 操作按钮 -->
+        <template #cell(actions)="data">
+          <div v-if="isAdmin">
+            <b-button
+              size="sm"
+              @click="showEditForm(data.item)"
+              variant="primary"
+            >Edit</b-button>
+            <b-button
+              size="sm"
+              @click="deletePost(data.item.id)"
+              variant="danger"
+            >Delete</b-button>
+          </div>
         </template>
       </b-table>
     </div>
@@ -50,12 +71,26 @@ export default {
         { key: 'head_img', label: 'Cover Image' },
         { key: 'Category.name', label: 'Category' }, // 修改这里来显示分类名称
         { key: 'User.Name', label: 'Author' },
+        { key: 'actions', label: 'Actions' },
       ],
     };
   },
   created() {
     this.fetchPosts();
   },
+  computed: {
+    isAdmin() {
+    // 从localStorage获取用户信息
+      const userInfo = localStorage.getItem('ginessentialuser_info');
+      // 检查用户信息是否存在并且用户角色是否是'Admin'
+      if (userInfo) {
+        const { role } = JSON.parse(userInfo);
+        return role === 'Admin';
+      }
+      return false; // 如果没有用户信息或者角色不是'Admin'，返回false
+    },
+  },
+
   methods: {
     getImageUrl(relativePath) {
       return `http://localhost:1016/images/${relativePath}`;
@@ -72,7 +107,7 @@ export default {
       });
     },
     showEditForm(post) {
-      this.$router.push({ name: 'postedit', params: { id: post.id } });
+      this.$router.push({ name: 'adminpostedit', params: { id: post.id } });
     },
     deletePost(postId) {
       const token = storageService.get(storageService.USER_TOKEN);
@@ -90,9 +125,7 @@ export default {
 
 <style>
 .post-cover-image {
-  max-width: 200px; /* 最大宽度 */
-  max-height: 200px; /* 最大高度 */
-  width: auto; /* 自动调整宽度以保持图像的宽高比 */
-  height: auto; /* 自动调整高度以保持图像的宽高比 */
+  max-width: 100px; /* Adjust the size as needed */
+  height: auto;
 }
 </style>

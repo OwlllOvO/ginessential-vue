@@ -4,6 +4,7 @@ const adminRoutes = [
     name: 'adminuserlist',
     meta: {
       auth: true,
+      requiresAdmin: true,
     },
     component: () => import('@/views/admin/Users/UserList.vue'),
   },
@@ -12,6 +13,7 @@ const adminRoutes = [
     name: 'adminuseradd',
     meta: {
       auth: true,
+      requiresAdmin: true,
     },
     component: () => import('@/views/admin/Users/UserAdd.vue'),
   },
@@ -20,6 +22,7 @@ const adminRoutes = [
     name: 'adminuserupdate',
     meta: {
       auth: true,
+      requiresAdmin: true,
     },
     component: () => import('@/views/admin/Users/UserUpdate.vue'),
   },
@@ -28,32 +31,36 @@ const adminRoutes = [
     name: 'adminpostlist',
     meta: {
       auth: true,
+      requiresAdmin: true,
     },
-    component: () => import('@/views/admin/Posts/PostList.vue'),
+    component: () => import('@/views/Posts/PostList.vue'),
   },
   {
     path: '/admin/posts/create',
     name: 'adminpostcreate',
     meta: {
       auth: true,
+      requiresAdmin: true,
     },
-    component: () => import('@/views/admin/Posts/PostCreate.vue'),
+    component: () => import('@/views/Posts/PostCreate.vue'),
   },
   {
     path: '/admin/posts/edit/:id',
     name: 'adminpostedit',
     meta: {
       auth: true,
+      requiresAdmin: true,
     },
-    component: () => import('@/views/admin/Posts/PostEdit.vue'),
+    component: () => import('@/views/Posts/PostEdit.vue'),
   },
   {
     path: '/admin/posts/:id',
     name: 'adminpostdetail',
     meta: {
       auth: true,
+      requiresAdmin: true,
     },
-    component: () => import('@/views/admin/Posts/PostDetail.vue'),
+    component: () => import('@/views/Posts/PostDetail.vue'),
   },
 ];
 

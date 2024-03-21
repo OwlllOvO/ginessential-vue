@@ -4,6 +4,7 @@ const postRoutes = [
     name: 'postlist',
     meta: {
       auth: true,
+      requiresAdmin: false,
     },
     component: () => import('@/views/Posts/PostList.vue'),
   },
@@ -12,6 +13,7 @@ const postRoutes = [
     name: 'postcreate',
     meta: {
       auth: true,
+      requiresAdmin: false,
     },
     component: () => import('@/views/Posts/PostCreate.vue'),
   },
@@ -20,6 +22,7 @@ const postRoutes = [
     name: 'postdetail',
     meta: {
       auth: true,
+      requiresAdmin: false,
     },
     component: () => import('@/views/Posts/PostDetail.vue'),
   },

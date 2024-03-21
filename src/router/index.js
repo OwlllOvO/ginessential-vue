@@ -34,15 +34,18 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.auth) { // check if need login
-    // check if user login
-    if (store.state.userModule.token) { // user has logined
-      // check is token validate, like expired
-      // if token expired, request new token
-      next();
-    } else { // user not login
-      // turn to login page
-      router.push({ name: 'login' });
+  if (to.meta.auth) {
+    if (store.state.userModule.token) {
+      const userInfo = JSON.parse(localStorage.getItem('ginessentialuser_info'));
+      const userRole = userInfo ? userInfo.role : null;
+
+      if (to.meta.requiresAdmin && userRole !== 'Admin') {
+        next({ name: 'Home' });
+      } else {
+        next();
+      }
+    } else {
+      next({ name: 'login', query: { redirect: to.fullPath } });
     }
   } else {
     next();
