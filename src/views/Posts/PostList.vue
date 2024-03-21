@@ -1,58 +1,57 @@
 <template>
-  <div class="post-management">
-    <!-- 文章列表视图 -->
-    <div v-if="viewMode === 'list'">
-      <!-- eslint-disable-next-line -->
-      <router-link :to="isAdmin ? `/admin/posts/create` : `/posts/create`">Create New Post</router-link>
+  <div class="post-list">
+    <!-- 创建新文章按钮 -->
+    <div class="create-post-button">
+      <router-link
+        :to="isAdmin ? `/admin/posts/create` : `/posts/create`"
+        class="btn btn-primary"
+      >Create New Post</router-link>
+    </div>
 
-      <b-table
-        striped
-        hover
-        :items="posts"
-        :fields="fields"
+    <!-- 文章列表 -->
+    <div class="posts-container">
+      <b-card
+        v-for="post in posts"
+        :key="post.id"
+        class="post-card mb-4"
+        no-body
       >
-        <!-- 文章标题 -->
-        <template #cell(title)="data">
-          <router-link :to="isAdmin ? `/admin/posts/${data.item.id}` : `/posts/${data.item.id}`">
-            {{ data.item.title }}
-          </router-link>
-
-        </template>
-
-        <!-- 封面图片 -->
-        <template #cell(head_img)="data">
-          <img
-            :src="getImageUrl(data.item.head_img)"
+        <template #header>
+          <b-card-img
+            :src="getImageUrl(post.head_img)"
             alt="Post Cover Image"
-            class="post-cover-image"
-          />
+            top
+          ></b-card-img>
         </template>
 
-        <!-- 分类名称 -->
-        <template #cell(category)="data">
-          {{ data.item.Category.name }}
-        </template>
+        <b-card-body>
+          <b-card-title>
+            <router-link :to="isAdmin ? `/admin/posts/${post.id}` : `/posts/${post.id}`">
+              {{ post.title }}
+            </router-link>
+          </b-card-title>
+          <b-card-text>
+            Category: {{ post.Category.name }}<br>
+            Author: {{ post.User.Name }}
+          </b-card-text>
+        </b-card-body>
 
-        <template #cell(author)="data">
-          {{ data.item.User.Name }}
-        </template>
-
-        <!-- 操作按钮 -->
-        <template #cell(actions)="data">
-          <div v-if="isAdmin">
-            <b-button
-              size="sm"
-              @click="showEditForm(data.item)"
-              variant="primary"
-            >Edit</b-button>
-            <b-button
-              size="sm"
-              @click="deletePost(data.item.id)"
-              variant="danger"
-            >Delete</b-button>
-          </div>
-        </template>
-      </b-table>
+        <b-card-footer
+          v-if="isAdmin"
+          class="text-muted"
+        >
+          <b-button
+            size="sm"
+            @click="showEditForm(post)"
+            variant="outline-primary"
+          >Edit</b-button>
+          <b-button
+            size="sm"
+            @click="deletePost(post.id)"
+            variant="outline-danger"
+          >Delete</b-button>
+        </b-card-footer>
+      </b-card>
     </div>
   </div>
 </template>
@@ -65,18 +64,11 @@ export default {
   data() {
     return {
       posts: [],
-      viewMode: 'list',
-      fields: [
-        { key: 'title', sortable: true },
-        { key: 'head_img', label: 'Cover Image' },
-        { key: 'Category.name', label: 'Category' }, // 修改这里来显示分类名称
-        { key: 'User.Name', label: 'Author' },
-        { key: 'actions', label: 'Actions' },
-      ],
     };
   },
   created() {
     this.fetchPosts();
+    this.checkAdmin();
   },
   computed: {
     isAdmin() {
@@ -123,9 +115,39 @@ export default {
 };
 </script>
 
-<style>
-.post-cover-image {
-  max-width: 100px; /* Adjust the size as needed */
-  height: auto;
+<style scoped>
+.post-list .b-card-img {
+  height: 200px;
+  object-fit: cover;
+}
+</style>
+
+<style scoped>
+.posts-container {
+  column-count: 3;
+  column-gap: 1rem;
+}
+
+.post-card {
+  display: inline-block; /* Important for column layout */
+  width: 100%;
+  break-inside: avoid; /* Avoid breaking inside the card */
+}
+
+@media (max-width: 768px) {
+  .posts-container {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 576px) {
+  .posts-container {
+    column-count: 1;
+  }
+}
+
+.b-card-img {
+  height: 200px; /* Set a fixed height for images */
+  object-fit: cover; /* Cover the entire area without stretching the image */
 }
 </style>
