@@ -25,11 +25,20 @@
         </template>
 
         <b-card-body>
-          <b-card-title>
-            <router-link :to="isAdmin ? `/admin/posts/${post.id}` : `/posts/${post.id}`">
-              {{ post.title }}
-            </router-link>
-          </b-card-title>
+          <div class="post-header">
+            <b-card-title>
+              <router-link :to="isAdmin ? `/admin/posts/${post.id}` : `/posts/${post.id}`">
+                {{ post.title }}
+              </router-link>
+            </b-card-title>
+
+            <span
+              v-if="isAdmin"
+              class="status-badge"
+              :class="`status-${post.status.toLowerCase()}`"
+            >{{ post.status }}</span>
+
+          </div>
           <b-card-text>
             Category: {{ post.Category.name }}<br>
             Author: {{ post.User.Name }}
@@ -50,6 +59,12 @@
             @click="deletePost(post.id)"
             variant="outline-danger"
           >Delete</b-button>
+          <b-button
+            v-if="post.status === 'Pending'"
+            size="sm"
+            @click="approvePost(post.id)"
+            variant="outline-success"
+          >Approve</b-button>
         </b-card-footer>
       </b-card>
     </div>
@@ -106,7 +121,8 @@ export default {
         headers: { Authorization: `Bearer ${token}` },
         params: { pageNum: this.currentPage, pageSize: this.pageSize },
       }).then((response) => {
-        this.posts = response.data.data.data;
+        // 过滤帖子，如果不是Admin，则仅显示状态为"Approved"的帖子
+        this.posts = this.isAdmin ? response.data.data.data : response.data.data.data.filter((post) => post.status === 'Approved');
         this.totalPosts = response.data.data.total; // 更新总文章数
       }).catch((error) => {
         console.error('There was an error fetching the posts:', error);
@@ -114,6 +130,27 @@ export default {
     },
     showEditForm(post) {
       this.$router.push({ name: 'adminpostedit', params: { id: post.id } });
+    },
+    approvePost(postId) {
+      const token = storageService.get(storageService.USER_TOKEN);
+      axios.post(`http://localhost:1016/admin/posts/${postId}/approve`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      }).then(() => {
+        this.$bvToast.toast('Post approved successfully', {
+          title: 'Success',
+          variant: 'success',
+          solid: true,
+        });
+        this.fetchPosts();
+      }).catch((error) => {
+        const message = error.response && error.response.data && error.response.data.data && error.response.data.data.error ? error.response.data.data.error : 'There was an error approving the post.';
+        console.error(message);
+        this.$bvToast.toast(message, {
+          title: 'Error',
+          variant: 'danger',
+          solid: true,
+        });
+      });
     },
     deletePost(postId) {
       const token = storageService.get(storageService.USER_TOKEN);
@@ -187,5 +224,37 @@ export default {
 .b-card-img {
   height: 200px; /* Set a fixed height for images */
   object-fit: cover; /* Cover the entire area without stretching the image */
+}
+
+.post-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 15px;
+  color: white;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+  margin-top: -0.5rem; /* Adjust the vertical position of the badge relative to the title */
+}
+.status-pending {
+  background-color: #ffc107; /* Amber */
+}
+
+.status-approved {
+  background-color: #28a745; /* Green */
+}
+
+.status-rejected {
+  background-color: #dc3545; /* Red */
 }
 </style>

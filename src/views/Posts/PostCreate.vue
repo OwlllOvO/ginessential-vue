@@ -73,6 +73,16 @@ export default {
     categoryOptions() {
       return this.categories.map((category) => ({ value: category.name, text: category.name }));
     },
+    isAdmin() {
+    // 从localStorage获取用户信息
+      const userInfo = localStorage.getItem('ginessentialuser_info');
+      // 检查用户信息是否存在并且用户角色是否是'Admin'
+      if (userInfo) {
+        const { role } = JSON.parse(userInfo);
+        return role === 'Admin';
+      }
+      return false; // 如果没有用户信息或者角色不是'Admin'，返回false
+    },
   },
   methods: {
     fetchCategories() {
@@ -132,7 +142,7 @@ export default {
           variant: 'success',
           solid: true,
         });
-        this.$router.push({ name: 'adminpostlist' }); // Redirect to post management page
+        this.$router.push({ name: this.isAdmin ? 'adminpostlist' : 'postlist' }); // Redirect to post management page
       }).catch((error) => {
         console.error('There was an error creating the post:', error);
         this.$bvToast.toast('Error creating article', {
@@ -143,7 +153,7 @@ export default {
       });
     },
     cancelForm() {
-      this.$router.push({ name: 'adminpostlist' }); // Redirect to post management page
+      this.$router.push({ name: this.isAdmin ? 'adminpostlist' : 'postlist' }); // Redirect to post management page
     },
   },
 };
