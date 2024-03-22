@@ -53,6 +53,16 @@
         </b-card-footer>
       </b-card>
     </div>
+
+    <!-- 分页组件 -->
+    <b-pagination
+      v-model="currentPage"
+      :total-rows="totalPosts"
+      :per-page="pageSize"
+      aria-controls="posts-container"
+      align="center"
+      class="mt-4"
+    ></b-pagination>
   </div>
 </template>
 
@@ -64,6 +74,9 @@ export default {
   data() {
     return {
       posts: [],
+      currentPage: 1, // 当前页码
+      pageSize: 10, // 每页显示的文章数
+      totalPosts: 0, // 文章总数
     };
   },
   created() {
@@ -91,9 +104,10 @@ export default {
       const token = storageService.get(storageService.USER_TOKEN);
       axios.post('http://localhost:1016/posts/page/list', {}, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { pageNum: 1, pageSize: 10 },
+        params: { pageNum: this.currentPage, pageSize: this.pageSize },
       }).then((response) => {
         this.posts = response.data.data.data;
+        this.totalPosts = response.data.data.total; // 更新总文章数
       }).catch((error) => {
         console.error('There was an error fetching the posts:', error);
       });
@@ -112,6 +126,12 @@ export default {
       });
     },
   },
+  watch: {
+    currentPage() {
+      this.fetchPosts(this.currentPage);
+    },
+  },
+
 };
 </script>
 
@@ -120,9 +140,7 @@ export default {
   height: 200px;
   object-fit: cover;
 }
-</style>
 
-<style scoped>
 .posts-container {
   column-count: 3;
   column-gap: 1rem;
