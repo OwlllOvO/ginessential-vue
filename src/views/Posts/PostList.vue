@@ -149,6 +149,13 @@ export default {
 </script>
 
 <style scoped>
+.create-post-button {
+  display: flex; /* 使用 Flexbox 布局 */
+  justify-content: center; /* 水平居中 */
+  margin-top: 20px; /* 与上部分的距离 */
+  margin-bottom: 20px; /* 与下部分的距离，根据需要调整 */
+}
+
 .post-list .b-card-img {
   height: 200px;
   object-fit: cover;
