@@ -53,17 +53,20 @@
             size="sm"
             @click="showEditForm(post)"
             variant="outline-primary"
+            class="mr-2"
           >Edit</b-button>
           <b-button
             size="sm"
             @click="deletePost(post.id)"
             variant="outline-danger"
+            class="mr-2"
           >Delete</b-button>
           <b-button
             v-if="post.status === 'Pending'"
             size="sm"
             @click="approvePost(post.id)"
             variant="outline-success"
+            class="mr-2"
           >Approve</b-button>
         </b-card-footer>
       </b-card>
@@ -256,5 +259,9 @@ export default {
 
 .status-rejected {
   background-color: #dc3545; /* Red */
+}
+
+.mr-2 {
+  margin-right: 0.5rem; /* 或者根据你的设计需求调整间距大小 */
 }
 </style>

@@ -6,7 +6,7 @@
       :src="getImageUrl(post.head_img)"
       alt="Post Cover Image"
       class="post-cover-image"
-    /> <!-- 添加这行 -->
+    />
     <h2> Description </h2>
     <p>{{ post.content }}</p>
     <div class="comments-section">
@@ -16,6 +16,7 @@
         :key="comment.id"
         class="comment"
       >
+        <small>{{ formatDate(comment.created_at) }}</small>
         <!-- eslint-disable-next-line max-len -->
         <p><strong>{{ comment.User.Name }} ({{ comment.User.Role }}):</strong> {{ comment.content }}</p>
       </div>
@@ -83,6 +84,12 @@ export default {
         .catch((error) => {
           console.error('There was an error submitting the comment:', error);
         });
+    },
+    formatDate(dateString) {
+      const options = {
+        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
+      };
+      return new Date(dateString).toLocaleDateString(undefined, options);
     },
   },
 };
