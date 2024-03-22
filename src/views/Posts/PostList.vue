@@ -120,11 +120,24 @@ export default {
       axios.delete(`http://localhost:1016/posts/${postId}`, {
         headers: { Authorization: `Bearer ${token}` },
       }).then(() => {
+        this.$bvToast.toast('Post deleted successfully', {
+          title: 'Success',
+          variant: 'success',
+          solid: true,
+        });
         this.fetchPosts();
       }).catch((error) => {
-        console.error('There was an error deleting the post:', error);
+        // 如果后端返回了错误信息，则显示后端的错误信息，否则显示默认的错误信息
+        const message = error.response && error.response.data && error.response.data.data && error.response.data.data.error ? error.response.data.data.error : 'There was an error deleting the post.';
+        console.error(message);
+        this.$bvToast.toast(message, {
+          title: 'Error',
+          variant: 'danger',
+          solid: true,
+        });
       });
     },
+
   },
   watch: {
     currentPage() {
