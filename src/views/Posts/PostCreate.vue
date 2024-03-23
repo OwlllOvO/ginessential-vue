@@ -97,14 +97,23 @@ export default {
     handleFileChange(event) {
       [this.selectedFile] = event.target.files;
       if (this.selectedFile) {
-        // Generate a local URL to preview the selected file
+      // 仅生成预览图，不进行上传
         this.imageUrl = URL.createObjectURL(this.selectedFile);
-        this.uploadImage(); // Upload the file when it's selected
       } else {
         console.error('No file selected');
       }
     },
-    uploadImage() {
+    createPost() {
+      if (!this.selectedFile) {
+      // 如果没有选择文件，提示用户需要选择图片
+        this.$bvToast.toast('Please select an image for the post.', {
+          title: 'Missing Image',
+          variant: 'warning',
+          solid: true,
+        });
+        return; // 终止创建文章
+      }
+
       const formData = new FormData();
       formData.append('file', this.selectedFile);
 
@@ -115,41 +124,29 @@ export default {
         },
       }).then((response) => {
         this.currentPost.head_img = response.data.filename;
-        this.imageUrl = this.getImageUrl(response.data.filename);
+        const postData = {
+          ...this.currentPost,
+        };
+
+        axios.post('http://localhost:1016/posts', postData, {
+          headers: { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` },
+        }).then(() => {
+          this.$bvToast.toast('Article created successfully', {
+            title: 'Success',
+            variant: 'success',
+            solid: true,
+          });
+          this.$router.push({ name: this.isAdmin ? 'adminpostlist' : 'postlist' }); // Redirect to post management page
+        }).catch((error) => {
+          console.error('There was an error creating the post:', error);
+          this.$bvToast.toast('Error creating article', {
+            title: 'Error',
+            variant: 'danger',
+            solid: true,
+          });
+        });
       }).catch((error) => {
         console.error('There was an error uploading the image:', error);
-      });
-    },
-    createPost() {
-      if (!this.currentPost.head_img) {
-        // 如果没有文件名，提示用户需要选择图片
-        this.$bvToast.toast('Please upload an image for the post.', {
-          title: 'Missing Image',
-          variant: 'warning',
-          solid: true,
-        });
-        return; // 终止创建文章
-      }
-      const postData = {
-        ...this.currentPost,
-      };
-
-      axios.post('http://localhost:1016/posts', postData, {
-        headers: { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` },
-      }).then(() => {
-        this.$bvToast.toast('Article created successfully', {
-          title: 'Success',
-          variant: 'success',
-          solid: true,
-        });
-        this.$router.push({ name: this.isAdmin ? 'adminpostlist' : 'postlist' }); // Redirect to post management page
-      }).catch((error) => {
-        console.error('There was an error creating the post:', error);
-        this.$bvToast.toast('Error creating article', {
-          title: 'Error',
-          variant: 'danger',
-          solid: true,
-        });
       });
     },
     cancelForm() {
