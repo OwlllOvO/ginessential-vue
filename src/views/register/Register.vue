@@ -103,7 +103,7 @@ export default {
       // Request API
       this.userRegister(this.user).then(() => {
         // turn to Home
-        this.$router.replace({ name: 'Home' });
+        this.$router.replace({ name: 'postlist' });
       }).catch((err) => {
         this.$bvToast.toast(err.response.data.msg, {
           title: 'Data validate error',

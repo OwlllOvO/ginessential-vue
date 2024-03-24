@@ -13,6 +13,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+    redirect: '/posts',
   },
   {
     path: '/about',
@@ -40,7 +41,7 @@ router.beforeEach((to, from, next) => {
       const userRole = userInfo ? userInfo.role : null;
 
       if (to.meta.requiresAdmin && userRole !== 'Admin') {
-        next({ name: 'Home' });
+        next({ name: 'postlist' });
       } else {
         next();
       }

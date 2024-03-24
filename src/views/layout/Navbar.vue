@@ -6,7 +6,7 @@
       variant="info"
     >
       <b-container>
-        <b-navbar-brand @click="$router.push({name: 'Home'})">WangPengbo</b-navbar-brand>
+        <b-navbar-brand @click="$router.push({name: 'postlist'})">WangPengbo</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
