@@ -1,42 +1,46 @@
 <template>
   <div class="post-detail">
     <h1>{{ post.title }}</h1>
-    <h2> Drawing </h2>
+    <h2>Drawing</h2>
     <img
       :src="getImageUrl(post.head_img)"
       alt="Post Cover Image"
       class="post-cover-image"
     />
-    <h2> Description </h2>
+    <h2>Description</h2>
     <p>{{ post.content }}</p>
-    <div class="comments-section">
-      <h3>Comments</h3>
+    <div>
+      <button
+        @click="likePost(post.id)"
+        class="mr-2"
+      >Like: {{ likeCount }}</button>
+      <button
+        @click="unlikePost(post.id)"
+        class="mr-2"
+      >Unlike</button>
+    </div>
+
+    <textarea
+      v-model="newComment"
+      placeholder="Write a comment..."
+    ></textarea>
+    <button
+      @click="addComment"
+      class="submit-comment"
+    >Submit Comment</button>
+    <h2>Comments</h2>
+    <div>
       <div
         v-for="comment in post.comments"
         :key="comment.id"
-        class="comment"
+        class="comment card"
       >
-        <small>{{ formatDate(comment.created_at) }}</small>
-        <!-- eslint-disable-next-line max-len -->
-        <p><strong>{{ comment.User.Name }} ({{ comment.User.Role }}):</strong> {{ comment.content }}</p>
+        <div class="card-body">
+          <!-- eslint-disable-next-line max-len -->
+          <p class="card-title"><strong>{{ comment.User.Name }} ({{ comment.User.Role }}) </strong><small>{{ formatDate(comment.created_at) }}</small></p>
+          <p class="card-text">{{ comment.content }}</p>
+        </div>
       </div>
-      <div>Like Count: {{ likeCount }}</div>
-      <div>
-        <button
-          @click="likePost(post.id)"
-          class="mr-2"
-        >Like</button>
-        <button
-          @click="unlikePost(post.id)"
-          class="mr-2"
-        >Unlike</button>
-      </div>
-
-      <textarea
-        v-model="newComment"
-        placeholder="Write a comment..."
-      ></textarea>
-      <button @click="addComment">Submit Comment</button>
     </div>
   </div>
 </template>
@@ -167,6 +171,27 @@ export default {
 </script>
 
 <style>
+.comment.card {
+  background-color: #fff; /* 卡片背景色 */
+  border: 1px solid #ddd; /* 卡片边框 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 卡片阴影 */
+  margin-bottom: 20px; /* 卡片间距 */
+  border-radius: 5px; /* 卡片圆角 */
+}
+
+.card-body {
+  padding: 20px; /* 卡片内边距 */
+}
+
+.card-title {
+  margin-bottom: 15px; /* 标题与内容间距 */
+  font-size: 16px; /* 标题字体大小 */
+}
+
+.card-text {
+  font-size: 14px; /* 内容字体大小 */
+}
+
 .comments-section {
   margin-top: 20px;
 }
@@ -188,5 +213,9 @@ textarea {
 
 .mr-2 {
   margin-right: 0.5rem; /* 或者根据你的设计需求调整间距大小 */
+}
+
+.submit-comment {
+  margin-top: 0.5rem;
 }
 </style>
