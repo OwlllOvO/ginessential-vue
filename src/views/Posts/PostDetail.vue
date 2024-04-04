@@ -1,3 +1,4 @@
+<!-- eslint-disable max-len -->
 <template>
   <div class="post-detail">
     <h1>{{ post.title }}</h1>
@@ -10,14 +11,7 @@
     <h2>Description</h2>
     <p>{{ post.content }}</p>
     <div>
-      <button
-        @click="likePost(post.id)"
-        class="mr-2"
-      >Like: {{ likeCount }}</button>
-      <button
-        @click="unlikePost(post.id)"
-        class="mr-2"
-      >Unlike</button>
+      <button @click="handleLikeOrUnlike(post.id)">{{ isPostLiked ? 'Liked' : 'Like' }} ({{ likeCount }})</button>
     </div>
 
     <textarea
@@ -36,7 +30,6 @@
         class="comment card"
       >
         <div class="card-body">
-          <!-- eslint-disable-next-line max-len -->
           <p class="card-title"><strong>{{ comment.User.Name }} ({{ comment.User.Role }}) </strong><small>{{ formatDate(comment.created_at) }}</small></p>
           <p class="card-text">{{ comment.content }}</p>
         </div>
@@ -59,10 +52,12 @@ export default {
       },
       newComment: '',
       likeCount: 0,
+      isPostLiked: false,
     };
   },
   created() {
     this.fetchPost();
+    this.isLiked();
   },
   methods: {
     getImageUrl(relativePath) {
@@ -120,6 +115,19 @@ export default {
       };
       return new Date(dateString).toLocaleDateString(undefined, options);
     },
+    isLiked() {
+      const postId = this.$route.params.id;
+      const token = storageService.get(storageService.USER_TOKEN);
+      axios.get(`http://localhost:1016/posts/${postId}/isliked`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((response) => {
+        this.isPostLiked = response.data.data.isLiked; // 根据后端返回更新点赞状态
+      }).catch((error) => {
+        console.error('There was an error checking like status:', error);
+      });
+    },
     likePost(postId) {
       const token = storageService.get(storageService.USER_TOKEN);
       axios.post(`http://localhost:1016/posts/${postId}/like`, {}, {
@@ -132,6 +140,7 @@ export default {
           solid: true,
         });
         this.fetchPost();
+        this.isLiked();
       })
         .catch((error) => {
           // 使用BootstrapVue Toast显示后端返回的错误信息
@@ -156,6 +165,7 @@ export default {
           solid: true,
         });
         this.fetchPost();
+        this.isLiked();
       })
         .catch((error) => {
           // 使用BootstrapVue Toast显示后端返回的错误信息
@@ -165,6 +175,13 @@ export default {
             solid: true,
           });
         });
+    },
+    handleLikeOrUnlike(postId) {
+      if (this.isPostLiked) {
+        this.unlikePost(postId); // 如果已点赞，则调用 unlikePost
+      } else {
+        this.likePost(postId); // 如果未点赞，则调用 likePost
+      }
     },
   },
 };
