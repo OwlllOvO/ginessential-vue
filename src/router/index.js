@@ -5,6 +5,7 @@ import Home from '../views/Home.vue';
 import userRoutes from './module/user';
 import adminRoutes from './module/admin';
 import postRoutes from './module/post';
+import chatRoutes from './module/chat';
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,7 @@ const routes = [
   ...userRoutes,
   ...adminRoutes,
   ...postRoutes,
+  ...chatRoutes,
 ];
 
 const router = new VueRouter({
