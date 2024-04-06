@@ -46,7 +46,7 @@
                 <em>{{userInfo.name}}</em>
               </template>
               <!-- eslint-disable-next-line max-len -->
-              <b-dropdown-item @click="$router.push({ name: 'profile' })">Personal Page</b-dropdown-item>
+              <b-dropdown-item @click="goToUserProfile">Personal Page</b-dropdown-item>
               <b-dropdown-item @click="logout">Log Out</b-dropdown-item>
             </b-nav-item-dropdown>
             <div v-if="!userInfo">
@@ -68,13 +68,27 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import storageService from '../../service/storageService'; // 引入storageService
 
 export default {
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
   }),
 
-  methods: mapActions('userModule', ['logout']),
+  methods: {
+    ...mapActions('userModule', ['logout']),
+    goToUserProfile() {
+    // 从localStorage中获取userid
+      const userid = storageService.get(storageService.USER_ID);
+      // 如果userid存在，则跳转到用户主页
+      if (userid) {
+        this.$router.push({ name: 'UserPosts', params: { id: userid } });
+      } else {
+      // 如果没有找到userid，可能需要处理用户未登录的情况
+        console.log('User ID not found. User might not be logged in.');
+      }
+    },
+  },
 };
 </script>
 

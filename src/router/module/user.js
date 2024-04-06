@@ -17,6 +17,11 @@ const userRoutes = [
     },
     component: () => import('@/views/profile/Profile.vue'),
   },
+  {
+    path: '/user/:id',
+    name: 'UserPosts',
+    component: () => import('@/views/users/UserPosts.vue'),
+  },
 ];
 
 export default userRoutes;
