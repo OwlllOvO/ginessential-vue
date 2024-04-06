@@ -91,18 +91,13 @@ export default {
       axios.get(`http://localhost:1016/messages?receiver_id=${this.receiverId}&post_id=${this.postid}`, {
         headers: { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` },
       }).then((response) => {
-        const { messagesContainer } = this.$refs; // 确保你的聊天记录容器有ref="messagesContainer"
-        // 检查是否已经滚动到底部
-        // eslint-disable-next-line max-len
-        const isScrolledToBottom = messagesContainer.scrollHeight - messagesContainer.clientHeight <= messagesContainer.scrollTop + 1;
-
         this.messages = response.data.data.messages;
         // 如果用户已经在底部，获取新消息后自动滚动到底部
-        if (isScrolledToBottom) {
-          this.$nextTick(() => {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-          });
-        }
+        this.$nextTick(() => {
+          const { messagesContainer } = this.$refs;
+          // 滚动到消息容器的底部
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
       }).catch((error) => {
         console.error('Failed to fetch messages', error);
       });
@@ -165,7 +160,7 @@ export default {
   margin-bottom: 10px;
   padding: 10px;
   display: flex;
-  flex-direction: column-reverse; /* 使消息从底部开始显示 */
+  flex-direction: column-reverse;
 }
 
 .mine,
