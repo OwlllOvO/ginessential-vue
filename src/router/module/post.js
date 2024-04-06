@@ -18,6 +18,15 @@ const postRoutes = [
     component: () => import('@/views/Posts/PostCreate.vue'),
   },
   {
+    path: '/posts/rank',
+    name: 'postrank',
+    meta: {
+      auth: true,
+      requiresAdmin: false,
+    },
+    component: () => import('@/views/Posts/PostRank.vue'),
+  },
+  {
     path: '/posts/:id',
     name: 'postdetail',
     meta: {
