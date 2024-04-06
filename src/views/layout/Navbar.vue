@@ -8,6 +8,7 @@
       <b-container>
         <b-navbar-brand @click="$router.push({name: 'postlist'})">Home</b-navbar-brand>
         <b-navbar-brand @click="$router.push({name: 'postrank'})">Rank</b-navbar-brand>
+        <b-navbar-brand @click="$router.push({name: 'ChatList'})">Messages</b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse
