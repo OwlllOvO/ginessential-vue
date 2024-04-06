@@ -1,24 +1,40 @@
 <template>
-  <div class="chat-container">
-    <div
-      class="messages"
-      ref="messagesContainer"
-    >
-      <div
-        v-for="message in messages"
-        :key="message.ID"
-        :class="{'mine': message.sender_id == userId, 'theirs': message.sender_id != userId}"
+  <div class="chat-page-container">
+    <div class="post-content">
+      <!-- 帖子内容显示区域 -->
+      <h1>{{ post.title }}</h1>
+      <h2>Drawing</h2>
+      <img
+        :src="getImageUrl(post.head_img)"
+        alt="Post Cover"
+        class="post-cover-image"
       >
-        <div class="message-content">{{ message.content }}</div>
-        <div class="message-date">{{ formatDate(message.created_at) }}</div>
-      </div>
+      <h2>Description</h2>
+      <p>{{ post.content }}</p>
+      <h2>Author</h2>
+      <p>{{ post.User.Name }}</p>
     </div>
-    <div class="send-message">
-      <textarea
-        v-model="newMessage"
-        placeholder="Type a message..."
-      ></textarea>
-      <button @click="sendMessage">Send</button>
+    <div class="chat-container">
+      <div
+        class="messages"
+        ref="messagesContainer"
+      >
+        <div
+          v-for="message in messages"
+          :key="message.ID"
+          :class="{'mine': message.sender_id == userId, 'theirs': message.sender_id != userId}"
+        >
+          <div class="message-content">{{ message.content }}</div>
+          <div class="message-date">{{ formatDate(message.created_at) }}</div>
+        </div>
+      </div>
+      <div class="send-message">
+        <textarea
+          v-model="newMessage"
+          placeholder="Type a message..."
+        ></textarea>
+        <button @click="sendMessage">Send</button>
+      </div>
     </div>
   </div>
 </template>
@@ -30,24 +46,49 @@ import storageService from '../../service/storageService'; // Adjust the import 
 export default {
   data() {
     return {
+      post: {
+        title: '',
+        content: '',
+        comments: [],
+      },
       messages: [],
       newMessage: '',
       userId: null,
       receiverId: this.$route.params.id,
+      postid: this.$route.params.postid,
     };
   },
   created() {
     this.userId = storageService.get(storageService.USER_ID);
-    console.log(this.userId);
+    this.receiverId = this.$route.params.id;
+    this.postid = this.$route.params.postid;
+    this.fetchPost();
     this.fetchMessages();
     this.startPolling();
   },
   methods: {
+    getImageUrl(relativePath) {
+      return `http://localhost:1016/images/${relativePath}`;
+    },
+    fetchPost() {
+      const token = storageService.get(storageService.USER_TOKEN); // 获取Token
+      axios.get(`http://localhost:1016/posts/${this.postid}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // 设置Authorization头部
+        },
+      })
+        .then((response) => {
+          this.post = response.data.data.post;
+        })
+        .catch((error) => {
+          console.error('There was an error fetching the post:', error);
+        });
+    },
     getUserInfo() {
       return JSON.parse(storageService.get(storageService.USER_INFO));
     },
     fetchMessages() {
-      axios.get(`http://localhost:1016/messages?receiver_id=${this.receiverId}`, {
+      axios.get(`http://localhost:1016/messages?receiver_id=${this.receiverId}&post_id=${this.postid}`, {
         headers: { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` },
       }).then((response) => {
         const { messagesContainer } = this.$refs; // 确保你的聊天记录容器有ref="messagesContainer"
@@ -56,7 +97,6 @@ export default {
         const isScrolledToBottom = messagesContainer.scrollHeight - messagesContainer.clientHeight <= messagesContainer.scrollTop + 1;
 
         this.messages = response.data.data.messages;
-        this.messages.reverse();
         // 如果用户已经在底部，获取新消息后自动滚动到底部
         if (isScrolledToBottom) {
           this.$nextTick(() => {
@@ -74,6 +114,7 @@ export default {
       const payload = {
         receiver_id: Number(this.receiverId),
         content: this.newMessage,
+        post_id: this.postid,
       };
 
       axios.post('http://localhost:1016/message', payload, {
@@ -101,7 +142,17 @@ export default {
 </script>
 
 <style scoped>
+.chat-page-container {
+  display: flex;
+}
+
+.post-content {
+  flex: 1;
+  padding: 20px;
+}
+
 .chat-container {
+  flex: 2;
   display: flex;
   flex-direction: column;
   height: 90vh;
@@ -109,28 +160,29 @@ export default {
 
 .messages {
   flex-grow: 1;
-  overflow-y: auto; /* Enable vertical scrolling */
-  max-height: 80vh; /* Limit the maximum height to 80% of the viewport height */
-  margin-bottom: 10px; /* Space between messages and send-message box */
+  overflow-y: auto;
+  max-height: 80vh;
+  margin-bottom: 10px;
   padding: 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse; /* 使消息从底部开始显示 */
+}
+
+.mine,
+.theirs {
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 5px 10px;
 }
 
 .mine {
   align-self: flex-end;
   background-color: #dcf8c6;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  padding: 5px 10px;
 }
 
 .theirs {
   align-self: flex-start;
   background-color: #e9e9eb;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  padding: 5px 10px;
 }
 
 .message-content {
@@ -167,5 +219,11 @@ export default {
 
 .send-message button:hover {
   background-color: #0056b3;
+}
+
+.post-cover-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
 }
 </style>
