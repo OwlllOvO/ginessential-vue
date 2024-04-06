@@ -86,6 +86,13 @@
             </small>
           </p>
           <p class="card-text">{{ comment.content }}</p>
+
+          <button
+            @click="startChatWithCommentAuthor(comment.User.ID, post.id)"
+            class="start-comment-chat-btn"
+          >
+            Start Chat
+          </button>
         </div>
       </div>
     </div>
@@ -114,6 +121,9 @@ export default {
     this.isLiked();
   },
   methods: {
+    startChatWithCommentAuthor(commentAuthorId, postId) {
+      this.$router.push({ path: `/chat/${commentAuthorId}/${postId}` });
+    },
     startChat() {
       // 使用 Vue Router 的编程式导航来跳转到聊天页面
       // 'authorId' 和 'id' 是从 post 对象中获取的，分别代表作者的 ID 和帖子的 ID
@@ -299,5 +309,48 @@ textarea {
   width: 20px; /* 图标大小 */
   height: 20px;
   margin-right: 5px; /* 图标和点赞数之间的距离 */
+}
+
+.submit-comment,
+.start-chat-btn {
+  padding: 10px 20px; /* 增加内边距，使按钮更大更易点击 */
+  border-radius: 5px; /* 圆角边框 */
+  border: 1px solid transparent; /* 透明边框，可根据需要调整 */
+  cursor: pointer; /* 鼠标悬停时变成手指图标，表示可点击 */
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* 平滑过渡效果 */
+  margin-right: 10px;
+}
+
+.start-comment-chat-btn {
+  border-radius: 5px; /* 圆角边框 */
+  border: 1px solid transparent; /* 透明边框，可根据需要调整 */
+  cursor: pointer; /* 鼠标悬停时变成手指图标，表示可点击 */
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* 平滑过渡效果 */
+  margin-right: 10px;
+  background-color: #007bff; /* 开始聊天按钮的背景颜色 */
+  color: white; /* 开始聊天按钮的文本颜色 */
+}
+
+.submit-comment {
+  background-color: #4caf50; /* 提交按钮的背景颜色 */
+  color: white; /* 提交按钮的文本颜色 */
+}
+
+.start-chat-btn {
+  background-color: #007bff; /* 开始聊天按钮的背景颜色 */
+  color: white; /* 开始聊天按钮的文本颜色 */
+}
+
+.submit-comment:hover,
+.start-chat-btn:hover {
+  background-color: #45a049; /* 提交按钮的鼠标悬停背景颜色 */
+  color: #ffffff; /* 提交按钮的鼠标悬停文本颜色 */
+  border-color: #3e8e41; /* 提交按钮的鼠标悬停边框颜色 */
+}
+
+.start-chat-btn:hover {
+  background-color: #0056b3; /* 开始聊天按钮的鼠标悬停背景颜色 */
+  color: #ffffff; /* 开始聊天按钮的鼠标悬停文本颜色 */
+  border-color: #004085; /* 开始聊天按钮的鼠标悬停边框颜色 */
 }
 </style>

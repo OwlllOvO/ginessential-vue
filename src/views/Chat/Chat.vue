@@ -3,7 +3,6 @@
     <div class="post-content">
       <!-- 帖子内容显示区域 -->
       <h1>{{ post.title }}</h1>
-      <h2>Drawing</h2>
       <img
         :src="getImageUrl(post.head_img)"
         alt="Post Cover"
@@ -142,8 +141,13 @@ export default {
 }
 
 .post-content {
-  flex: 1;
-  padding: 20px;
+  /* 帖子内容区域的整体样式，包括背景色、边距、内边距等 */
+  background-color: #fff; /* 白色背景 */
+  border-radius: 8px; /* 圆角 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 阴影效果 */
+  padding: 20px; /* 内边距 */
+  margin: 20px; /* 外边距，与其他元素保持一定距离 */
+  max-width: 600px; /* 最大宽度，保持内容不会过宽 */
 }
 
 .chat-container {
