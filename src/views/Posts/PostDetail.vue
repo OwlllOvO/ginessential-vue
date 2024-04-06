@@ -67,7 +67,19 @@
         class="comment card"
       >
         <div class="card-body">
-          <p class="card-title"><strong>{{ comment.User.Name }} ({{ comment.User.Role }}) </strong><small>{{ formatDate(comment.created_at) }}</small></p>
+          <p class="card-title">
+            <router-link
+              :to="`/user/${comment.User.ID}`"
+              class="comment-author"
+            >
+              <strong>
+                {{ comment.User.Name }} ({{ comment.User.Role }})
+              </strong>
+            </router-link>
+            <small>
+              {{ formatDate(comment.created_at) }}
+            </small>
+          </p>
           <p class="card-text">{{ comment.content }}</p>
         </div>
       </div>
