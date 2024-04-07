@@ -6,11 +6,11 @@
       <div
         v-for="conversation in conversations"
         :key="conversation.post_id"
-        @click="goToChat(conversation.sender_id, conversation.post_id)"
+        @click="goToChat(conversation.other_participant_id, conversation.post_id)"
         class="chat-item"
       >
         <div class="text-content">
-          <h3>{{ conversation.sender_name }}</h3>
+          <h3>{{ conversation.other_participant_name }}</h3>
           <p>Post: {{ conversation.post_title }}</p>
           <p>Last Message: "{{ conversation.last_message_content }}"</p>
           <p>at {{ formatDate(conversation.last_message_time) }}</p>
@@ -57,8 +57,8 @@ export default {
       };
       return new Date(dateString).toLocaleDateString(undefined, options);
     },
-    goToChat(senderId, postId) {
-      this.$router.push({ name: 'Chat', params: { id: senderId, postid: postId } });
+    goToChat(otherId, postId) {
+      this.$router.push({ name: 'Chat', params: { id: otherId, postid: postId } });
     },
   },
 };
