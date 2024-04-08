@@ -1,5 +1,14 @@
 const adminRoutes = [
   {
+    path: '/admin',
+    name: 'adminhome',
+    meta: {
+      auth: true,
+      requiresAdmin: true,
+    },
+    component: () => import('@/views/admin/Home.vue'),
+  },
+  {
     path: '/admin/users',
     name: 'adminuserlist',
     meta: {

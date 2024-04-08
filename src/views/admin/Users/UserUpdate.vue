@@ -23,7 +23,9 @@
         <input
           type="password"
           v-model="user.Password"
+          placeholder="••••••••••"
         >
+
       </div>
       <div>
         <label>角色:</label>

@@ -9,6 +9,10 @@
         <b-navbar-brand @click="$router.push({name: 'postlist'})">Home</b-navbar-brand>
         <b-navbar-brand @click="$router.push({name: 'postrank'})">Rank</b-navbar-brand>
         <b-navbar-brand @click="$router.push({name: 'ChatList'})">Messages</b-navbar-brand>
+        <b-navbar-brand
+          v-if="isAdmin"
+          @click="goToAdminHome"
+        >Admin</b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse
@@ -74,6 +78,16 @@ import storageService from '../../service/storageService'; // 引入storageServi
 export default {
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
+    isAdmin() {
+    // 从localStorage获取用户信息
+      const userInfo = localStorage.getItem('ginessentialuser_info');
+      // 检查用户信息是否存在并且用户角色是否是'Admin'
+      if (userInfo) {
+        const { role } = JSON.parse(userInfo);
+        return role === 'Admin';
+      }
+      return false; // 如果没有用户信息或者角色不是'Admin'，返回false
+    },
   }),
 
   methods: {
@@ -88,6 +102,9 @@ export default {
       // 如果没有找到userid，可能需要处理用户未登录的情况
         console.log('User ID not found. User might not be logged in.');
       }
+    },
+    goToAdminHome() {
+      this.$router.push({ name: 'adminhome' });
     },
   },
 };
