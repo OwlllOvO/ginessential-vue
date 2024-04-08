@@ -10,6 +10,14 @@
     />
     <h2>Description</h2>
     <p>{{ post.content }}</p>
+    <p>Created by
+      <router-link
+        :to="`/user/${post.User.ID}`"
+        class="comment-author"
+      >{{ post.User.Name }}
+      </router-link>
+      on {{ formatDate(post.created_at) }}
+    </p>
     <div
       v-if="isPostLiked"
       @click="handleLikeOrUnlike(post.id)"

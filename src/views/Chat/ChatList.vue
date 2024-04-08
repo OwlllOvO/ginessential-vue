@@ -12,7 +12,7 @@
         <div class="text-content">
           <h3>{{ conversation.other_participant_name }}</h3>
           <p>Post: {{ conversation.post_title }}</p>
-          <p>Last Message: "{{ conversation.last_message_content }}"</p>
+          <p>Last Message: "{{ truncateMessage(conversation.last_message_content) }}"</p>
           <p>at {{ formatDate(conversation.last_message_time) }}</p>
         </div>
         <img
@@ -56,6 +56,12 @@ export default {
         year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
       };
       return new Date(dateString).toLocaleDateString(undefined, options);
+    },
+    truncateMessage(message, maxLength = 20) {
+      if (message.length > maxLength) {
+        return `${message.substring(0, maxLength)}...`; // 如果消息长度超过20个字符，就截取前20个字符并添加省略号
+      }
+      return message; // 如果消息长度不超过20个字符，就返回原始消息
     },
     goToChat(otherId, postId) {
       this.$router.push({ name: 'Chat', params: { id: otherId, postid: postId } });
