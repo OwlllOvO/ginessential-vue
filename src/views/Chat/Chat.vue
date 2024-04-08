@@ -55,6 +55,7 @@ export default {
       userId: null,
       receiverId: this.$route.params.id,
       postid: this.$route.params.postid,
+      pollingInterval: null,
     };
   },
   created() {
@@ -64,6 +65,12 @@ export default {
     this.fetchPost();
     this.fetchMessages();
     this.startPolling();
+  },
+  beforeDestroy() {
+    // 在组件销毁前清除定时器
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   },
   methods: {
     getImageUrl(relativePath) {
@@ -127,7 +134,7 @@ export default {
       return new Date(dateString).toLocaleDateString(undefined, options);
     },
     startPolling() {
-      setInterval(() => {
+      this.pollingInterval = setInterval(() => {
         this.fetchMessages();
       }, 5000);
     },
