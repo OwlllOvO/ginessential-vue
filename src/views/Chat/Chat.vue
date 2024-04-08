@@ -154,7 +154,7 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 阴影效果 */
   padding: 20px; /* 内边距 */
   margin: 20px; /* 外边距，与其他元素保持一定距离 */
-  max-width: 600px; /* 最大宽度，保持内容不会过宽 */
+  max-width: 300px; /* 最大宽度，保持内容不会过宽 */
 }
 
 .chat-container {
