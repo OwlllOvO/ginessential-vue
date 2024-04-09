@@ -1,6 +1,6 @@
 <template>
   <div class="post-list">
-    <!-- 文章排行榜 -->
+    <!-- 作品排行榜 -->
     <div class="posts-container">
       <b-card
         v-for="post in posts"

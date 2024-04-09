@@ -138,14 +138,14 @@ export default {
         .then((response) => {
           // eslint-disable-next-line max-len
           this.currentPost = { ...response.data.data.post, category_name: response.data.data.post.Category.name };
-          this.imageUrl = this.getImageUrl(this.currentPost.head_img); // 如果文章已有图片，则显示图片预览
+          this.imageUrl = this.getImageUrl(this.currentPost.head_img); // 如果作品已有图片，则显示图片预览
         })
         .catch((error) => {
           console.error('There was an error loading the post data:', error);
         });
     },
     updatePost() {
-      // 确保在更新文章时，如果没有选择新图片，则使用现有图片
+      // 确保在更新作品时，如果没有选择新图片，则使用现有图片
       if (!this.selectedFile && !this.currentPost.head_img) {
         // eslint-disable-next-line no-alert
         alert('Please upload an image for the post.');

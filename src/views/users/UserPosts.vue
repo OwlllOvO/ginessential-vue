@@ -1,7 +1,7 @@
 <template>
   <div class="user-posts">
     <h1> {{ userName }}</h1>
-    <!-- 文章列表 -->
+    <!-- 作品列表 -->
     <div class="posts-container">
       <b-card
         v-for="post in posts"
@@ -68,7 +68,7 @@ export default {
       }).then((response) => {
         this.userName = response.data.data.userName;
         this.posts = response.data.data.posts;
-        this.totalPosts = response.data.data.posts.length; // 假设后端返回了总帖子数
+        this.totalPosts = response.data.data.posts.length; // 假设后端返回了总作品数
       }).catch((error) => {
         console.error('There was an error fetching the user\'s posts:', error);
       });

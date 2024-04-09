@@ -1,6 +1,6 @@
 <template>
   <div class="post-list">
-    <!-- 创建新文章按钮 -->
+    <!-- 创建新作品按钮 -->
     <div class="create-post-button">
       <router-link
         :to="isAdmin ? `/admin/posts/create` : `/posts/create`"
@@ -8,7 +8,7 @@
       >Create New Post</router-link>
     </div>
 
-    <!-- 文章列表 -->
+    <!-- 作品列表 -->
     <div class="posts-container">
       <b-card
         v-for="post in posts"
@@ -93,8 +93,8 @@ export default {
     return {
       posts: [],
       currentPage: 1, // 当前页码
-      pageSize: 1000, // 每页显示的文章数
-      totalPosts: 0, // 文章总数
+      pageSize: 1000, // 每页显示的作品数
+      totalPosts: 0, // 作品总数
     };
   },
   created() {
@@ -124,9 +124,9 @@ export default {
         headers: { Authorization: `Bearer ${token}` },
         params: { pageNum: this.currentPage, pageSize: this.pageSize },
       }).then((response) => {
-        // 过滤帖子，如果不是Admin，则仅显示状态为"Approved"的帖子
+        // 过滤作品，如果不是Admin，则仅显示状态为"Approved"的作品
         this.posts = this.isAdmin ? response.data.data.data : response.data.data.data.filter((post) => post.status === 'Approved');
-        this.totalPosts = response.data.data.total; // 更新总文章数
+        this.totalPosts = response.data.data.total; // 更新总作品数
       }).catch((error) => {
         console.error('There was an error fetching the posts:', error);
       });

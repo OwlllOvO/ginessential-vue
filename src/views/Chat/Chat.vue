@@ -1,7 +1,7 @@
 <template>
   <div class="chat-page-container">
     <div class="post-content">
-      <!-- 帖子内容显示区域 -->
+      <!-- 作品内容显示区域 -->
       <h1>{{ post.title }}</h1>
       <img
         :src="getImageUrl(post.head_img)"
@@ -148,7 +148,7 @@ export default {
 }
 
 .post-content {
-  /* 帖子内容区域的整体样式，包括背景色、边距、内边距等 */
+  /* 作品内容区域的整体样式，包括背景色、边距、内边距等 */
   background-color: #fff; /* 白色背景 */
   border-radius: 8px; /* 圆角 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 阴影效果 */

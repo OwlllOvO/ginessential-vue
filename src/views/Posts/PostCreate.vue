@@ -111,7 +111,7 @@ export default {
           variant: 'warning',
           solid: true,
         });
-        return; // 终止创建文章
+        return; // 终止创建作品
       }
 
       const formData = new FormData();

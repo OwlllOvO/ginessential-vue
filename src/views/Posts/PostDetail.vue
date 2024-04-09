@@ -134,7 +134,7 @@ export default {
     },
     startChat() {
       // 使用 Vue Router 的编程式导航来跳转到聊天页面
-      // 'authorId' 和 'id' 是从 post 对象中获取的，分别代表作者的 ID 和帖子的 ID
+      // 'authorId' 和 'id' 是从 post 对象中获取的，分别代表作者的 ID 和作品的 ID
       this.$router.push({ path: `/chat/${this.post.user_id}/${this.post.id}` });
     },
     getImageUrl(relativePath) {
