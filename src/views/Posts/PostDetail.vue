@@ -265,6 +265,10 @@ export default {
 </script>
 
 <style>
+.post-detail {
+  margin-top: 15px;
+}
+
 .comment.card {
   background-color: #fff; /* 卡片背景色 */
   border: 1px solid #ddd; /* 卡片边框 */
@@ -360,5 +364,12 @@ textarea {
   background-color: #0056b3; /* 开始聊天按钮的鼠标悬停背景颜色 */
   color: #ffffff; /* 开始聊天按钮的鼠标悬停文本颜色 */
   border-color: #004085; /* 开始聊天按钮的鼠标悬停边框颜色 */
+}
+
+.post-cover-image {
+  max-width: 200px; /* 控制图片宽度不超过容器宽度 */
+  max-height: 500px; /* 设置图片最大高度 */
+  height: auto; /* 保持图片原始宽高比 */
+  margin: 20px 0; /* 添加一些外边距 */
 }
 </style>
