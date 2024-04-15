@@ -116,6 +116,7 @@ export default {
 
       const formData = new FormData();
       formData.append('file', this.selectedFile);
+      formData.append('username', JSON.parse(localStorage.getItem('ginessentialuser_info')).name);
 
       axios.post('http://localhost:1016/posts/upload', formData, {
         headers: {
