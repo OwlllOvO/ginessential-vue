@@ -76,6 +76,8 @@ const userModule = {
       // Clear user info
       commit('SET_USERINFO', '');
       storageService.set(storageService.USER_INFO, '');
+      commit('SET_USERID', '');
+      storageService.set(storageService.USER_ID, '');
 
       window.location.reload();
     },
