@@ -93,7 +93,7 @@ export default {
     return {
       posts: [],
       currentPage: 1, // 当前页码
-      pageSize: 1000, // 每页显示的作品数
+      pageSize: 10, // 每页显示的作品数
       totalPosts: 0, // 作品总数
     };
   },
