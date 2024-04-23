@@ -41,6 +41,7 @@ const userModule = {
         userService.register({ name, telephone, password }).then((res) => {
           // Save Token
           context.commit('SET_TOKEN', res.data.data.token);
+          context.commit('SET_USERID', res.data.data.userid);
           return userService.info();
         }).then((res) => {
           // Save user info

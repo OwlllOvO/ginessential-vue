@@ -59,7 +59,6 @@ export default {
     };
   },
   created() {
-    this.userId = storageService.get(storageService.USER_ID);
     this.receiverId = this.$route.params.id;
     this.postid = this.$route.params.postid;
     this.fetchPost();
@@ -94,6 +93,8 @@ export default {
       return JSON.parse(storageService.get(storageService.USER_INFO));
     },
     fetchMessages() {
+      this.userId = storageService.get(storageService.USER_ID);
+      console.log(this.userId);
       axios.get(`http://localhost:1016/messages?receiver_id=${this.receiverId}&post_id=${this.postid}`, {
         headers: { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` },
       }).then((response) => {
@@ -136,7 +137,7 @@ export default {
     startPolling() {
       this.pollingInterval = setInterval(() => {
         this.fetchMessages();
-      }, 5000);
+      }, 1000);
     },
   },
 };
